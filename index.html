@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower land</title>
+    <link rel="stylesheet" href="/styles/custom.css">
+    <link rel="icon" href="/assets/images/lotus.png">
+</head>
+
+<body>
+    <header>
+        <nav class="links" id="headerNav">
+            <a href="#">My shop</a>
+            <a href="create.html">Add new flower</a>
+            <a href="edit.html">Edit</a>
+        </nav>
+        <img class="logo" src="/images/logo.png" alt="logo">
+    </header>
+    <main>
+        <aside>
+            <h2>Find desirable flower in one click</h2>
+            <div class="searchForm">
+                <input type="text" id="search" placeholder="Enter the name of flower...">
+                <button class="searchButton" onclick="searchFlower()">Search</button>
+            </div>
+            <div class="sorting">            
+                <h2>Sort by:</h2>
+                <div class="sortCat">
+                    <input type="checkbox" id="name" onclick="sortByName()">
+                    <label for="nameSorting">name</label>
+                </div>
+                <div class="sortCat">
+                    <input type="checkbox" id="price" onclick="sortByPrice()">
+                    <label for="priceSorting">price</label>
+                </div></div>
+            <p>Total price: <span id="totalPrice"></span></p>
+        </aside>
+        <div class="content"></div>
+    </main>
+    <div class="alert" onclick="hideAlert()"></div>
+    <script src="js/index.js"></script>
+</body>
+</html>
