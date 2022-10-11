@@ -1,6 +1,11 @@
 let flowerId = localStorage.getItem('id');
-let flowerName = document.querySelector('#nameField');
-let flowerPrice = document.querySelector('#priceField');
+let flowerName = document.querySelector('#flowerName');
+let flowerPrice = document.querySelector('#flowerPrice');
+let flowerImage = document.querySelector('#flowerImage');
+
+function toMainPage() {
+    window.location.href = 'index.html';
+}
 
 function showAlert() {
     document.querySelector('.alert').style.width = '25vw';
@@ -11,12 +16,13 @@ function hideAlert() {
 }
 
 async function getFlower(id) {
-    fetch(`https://632c736e1aabd837399c6655.mockapi.io/flowers/${id}`)
+    fetch(`http://localhost:8080/api/v1/flower/${id}`)
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            carName.value = data.name;
-            carPrice.value = data.price;
+            flowerName.value = data.name;
+            flowerImage.value = data.image;
+            flowerPrice.value = data.price;
         })
         .catch((err) => {
             document.querySelector('.alert').textContent = `${err}`;
@@ -25,21 +31,23 @@ async function getFlower(id) {
 }
 
 async function updateFlower() {
-    if (flowerName.value && flowerPrice.value && flowerPrice.value >= 1) {
-        fetch(`https://632c736e1aabd837399c6655.mockapi.io/flowers/${flowerId}`, {
+    if (flowerName.value && flowerImage.value && flowerPrice.value >= 1) {
+        fetch(`http://localhost:8080/api/v1/flower/${flowerId}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({
                 'name': flowerName.value,
-                'price': parseInt(flowerPrice.value),
+                'image': flowerImage.value,
+                'price': flowerPrice.value
             })
         })
             .then(res => {
-                if (res.ok) {
+                if (res.status === 200) {
                     flowerName.value = '';
-                    flowerrPrice.value = '';
+                    flowerImage.value = '';
+                    flowerPrice.value = '';
                     localStorage.removeItem('id');
                     window.location.href = 'index.html';
                 } else {

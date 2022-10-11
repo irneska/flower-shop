@@ -1,6 +1,15 @@
 let flowers = [];
 let filteredArr = [];
 
+function toCreatePage() {
+    window.location.href = 'create.html';
+}
+
+function toEditPage(id) {
+    localStorage.setItem('id', id);
+    window.location.href = 'edit.html';
+}
+
 function showAlert() {
     document.querySelector('.alert').style.width = '25vw';
 }
@@ -14,21 +23,25 @@ function createFlowerElem(arr) {
     arr.forEach(element => {
         document.querySelector('.content').innerHTML += `
         <div class="item">
-            <h2>${element.name}</h2>
-            <p>${element.price}$</p>
+            <div class="cardBody">
+                <img class="itemImage" src="${element.image}" alt=card">
+                <h2 class="cardTitle">${element.name}</h2>
+                <p class="cardText">${element.price}$</p>
+            </div>
             <div class="actions">  
+                <button class="edit" onclick="toEditPage(${element.id})">Edit</button>
                 <button class="delete" onclick="deleteFlower(${element.id}, ${index++})">Delete</button>
             </div>
         </div>
         `;
     });
-} 
+}
 
 async function getFlowers() {
-    fetch('https://632c736e1aabd837399c6655.mockapi.io/flowers/')
+    fetch('http://localhost:8080/api/v1/flower')
         .then(res => res.json())
         .then(data => {
-            cars = data;
+            flowers = data;
             document.querySelector('.content').replaceChildren();
             createFlowerElem(flowers);
             getTotalPrice(flowers);
@@ -42,7 +55,7 @@ function searchFlower() {
     let search = document.querySelector('#search').value;
     if (search) {
         let reg = new RegExp(`${search}`);
-        filteredArr = cars.filter(element => reg.test(element.name) === true);
+        filteredArr = flowers.filter(element => reg.test(element.name) === true);
         document.querySelector('.content').replaceChildren();
         createFlowerElem(filteredArr);
         getTotalPrice(filteredArr);
@@ -93,7 +106,7 @@ function sortByPrice() {
         if (document.querySelector('#search').value) {
             sortPriceAl(filteredArr);
         } else {
-            sortPriceAl(cars);
+            sortPriceAl(flowers);
         }
     } else if (!document.querySelector('#search').value) {
         document.querySelector('.content').replaceChildren();
@@ -105,23 +118,23 @@ function getTotalPrice(arr) {
     let total = 0;
     console.log(arr);
     arr.forEach(element => {
-        total += element.price;
+        total += parseInt(element.price);
     });
     document.querySelector('#totalPrice').textContent = `${total}$`;
 }
 
 async function deleteFlower(id, index) {
-    fetch(`https://632c736e1aabd837399c6655.mockapi.io/flowers/${id}`,{
+    fetch(`http://localhost:8080/api/v1/flower/${id}`, {
         method: 'DELETE'
-    })  
-    .then(res => {
-        if(res.ok) {
-            flowers.splice(index, 1);
-            document.querySelector('.content').replaceChildren();
-            createFlowerElem(flowers);
-            getTotalPrice(flowers);
-        }
-    }) 
-} 
+    })
+        .then(res => {
+            if (res.ok) {
+                flowers.splice(index, 1);
+                document.querySelector('.content').replaceChildren();
+                createFlowerElem(flowers);
+                getTotalPrice(flowers);
+            }
+        })
+}
 
 getFlowers();

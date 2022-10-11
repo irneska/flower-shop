@@ -1,3 +1,7 @@
+function toMainPage() {
+    window.location.href = 'index.html';
+}
+
 function showAlert() {
     document.querySelector('.alert').style.width = '25vw';
 }
@@ -7,24 +11,26 @@ function hideAlert() {
 }
 
 async function createFlower() {
-    let name = document.querySelector('#nameField').value;
-    let price = parseInt(document.querySelector('#priceField').value);
-    console.log(typeof(price));
-    if (name && price >= 1) {
-        fetch('https://632c736e1aabd837399c6655.mockapi.io/flowers/', {
+    let name = document.querySelector('#flowerName').value;
+    let image = document.querySelector('#flowerImage').value;
+    let price = parseInt(document.querySelector('#flowerPrice').value);
+    if (name && image && price && price >= 1) {
+        fetch('http://localhost:8080/api/v1/flower', {
             headers: {
                 'Content-Type': 'application/json'
             },
             method: 'POST',
             body: JSON.stringify({
                 'name': name,
-                'price': price,
+                'image': image,
+                'price': price
             })
         })
             .then(res => {
-                if (res.ok) {
+                if (res.status === 200) {
                     name = '';
-                    price = 1;
+                    image = '';
+                    price = '';
                     window.location.href = 'index.html';
                 }
             })
